@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Computing & Azure — Comprehensive Exam</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4ff;
+    --surface: #ffffff;
+    --surface2: #e8eef8;
+    --border: #c7d4f0;
+    --accent: #2563eb;
+    --accent2: #7c3aed;
+    --correct: #059669;
+    --wrong: #dc2626;
+    --warn: #d97706;
+    --text: #1e293b;
+    --muted: #64748b;
+    --card: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BACKGROUND GRID */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .exam-header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .exam-header .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    margin-bottom: 16px;
+    border-radius: 2px;
+  }
+
+  .exam-header h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #1e293b 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .exam-header p {
+    color: var(--muted);
+    font-size: 14px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SCOREBOARD */
+  .scoreboard {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  .score-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .score-card .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .score-card .value {
+    font-size: 28px;
+    font-weight: 800;
+  }
+
+  .score-card.correct .value { color: var(--correct); }
+  .score-card.wrong .value { color: var(--wrong); }
+  .score-card.total .value { color: var(--accent); }
+  .score-card.pct .value { color: var(--warn); }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s 0.15s ease both;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+    animation: slideIn 0.4s ease both;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+
+  .question-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .question-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+
+  .difficulty-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  .diff-easy { background: rgba(16,185,129,0.15); color: var(--correct); border: 1px solid rgba(16,185,129,0.3); }
+  .diff-medium { background: rgba(245,158,11,0.15); color: var(--warn); border: 1px solid rgba(245,158,11,0.3); }
+  .diff-hard { background: rgba(239,68,68,0.15); color: var(--wrong); border: 1px solid rgba(239,68,68,0.3); }
+
+  .question-source {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+
+  .question-text {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 28px;
+    color: #1e293b;
+  }
+
+  /* OPTIONS */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #f8faff;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 15px;
+    line-height: 1.4;
+    text-align: left;
+    color: var(--text);
+  }
+
+  .option:hover:not(.disabled) {
+    border-color: var(--accent);
+    background: #eff6ff;
+    transform: translateX(3px);
+  }
+
+  .option .letter {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 20px;
+    padding-top: 1px;
+  }
+
+  .option.selected { border-color: var(--accent2); background: #f5f3ff; }
+  .option.correct-answer { border-color: var(--correct) !important; background: #ecfdf5 !important; }
+  .option.wrong-answer { border-color: var(--wrong) !important; background: #fef2f2 !important; }
+  .option.disabled { cursor: default; pointer-events: none; }
+
+  .option .icon {
+    margin-left: auto;
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  /* FEEDBACK BOX */
+  .feedback-box {
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .feedback-box.show { display: block; }
+  .feedback-box.correct { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); }
+  .feedback-box.incorrect { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); }
+
+  .feedback-verdict {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .feedback-box.correct .feedback-verdict { color: var(--correct); }
+  .feedback-box.incorrect .feedback-verdict { color: var(--wrong); }
+
+  .feedback-explanation {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #334155;
+  }
+
+  .feedback-explanation strong {
+    color: var(--accent);
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* NEXT BUTTON */
+  .btn-next {
+    display: none;
+    margin-top: 24px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    width: 100%;
+    letter-spacing: 1px;
+  }
+
+  .btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-next.show { display: block; animation: fadeIn 0.3s ease; }
+
+  /* RESULTS SCREEN */
+  #results-screen {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .results-hero {
+    text-align: center;
+    padding: 48px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+
+  .results-emoji { font-size: 64px; margin-bottom: 16px; }
+
+  .results-title {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .results-score-big {
+    font-family: 'Space Mono', monospace;
+    font-size: 56px;
+    font-weight: 700;
+    margin: 24px 0 8px;
+  }
+
+  .results-sub {
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .result-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .result-section h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .weak-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: #475569;
+  }
+
+  .weak-area:last-child { border-bottom: none; }
+  .weak-area::before { content: '▸'; color: var(--wrong); }
+
+  .strong-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: #475569;
+  }
+
+  .strong-area:last-child { border-bottom: none; }
+  .strong-area::before { content: '✓'; color: var(--correct); }
+
+  .missed-questions {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .missed-questions h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .missed-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .missed-item:last-child { border-bottom: none; }
+
+  .missed-item .missed-q {
+    color: #334155;
+    margin-bottom: 4px;
+  }
+
+  .missed-item .missed-correct {
+    color: var(--correct);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+
+  .btn-restart {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .btn-restart:hover { opacity: 0.9; }
+
+  /* INTRO SCREEN */
+  #intro-screen {
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .intro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 40px;
+    margin-bottom: 24px;
+    animation: fadeIn 0.6s ease;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+
+  .intro-card h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .intro-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 28px 0;
+  }
+
+  .intro-stat { text-align: center; }
+
+  .intro-stat .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+
+  .intro-stat .lbl {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    text-align: left;
+    margin: 20px 0;
+  }
+
+  .topic-item {
+    font-size: 13px;
+    color: #475569;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .topic-item::before { content: '→'; color: var(--accent); }
+
+  .btn-start {
+    display: inline-block;
+    padding: 16px 48px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,194,255,0.2); }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (max-width: 600px) {
+    .results-grid { grid-template-columns: 1fr; }
+    .topics-grid { grid-template-columns: 1fr; }
+    .scoreboard { flex-wrap: wrap; }
+    .score-card { min-width: calc(50% - 6px); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="exam-header">
+    <div class="tag">University Exam Prep</div>
+    <h1>Cloud Computing<br>& Azure Services</h1>
+    <p>Module 01 + Module 02 (Slides 1–33) · Interactive MCQ</p>
+  </div>
+
+  <!-- INTRO SCREEN -->
+  <div id="intro-screen">
+    <div class="intro-card">
+      <h2>📋 Exam Instructions</h2>
+      <div class="intro-stats">
+        <div class="intro-stat"><span class="num">40</span><span class="lbl">Questions</span></div>
+        <div class="intro-stat"><span class="num">3</span><span class="lbl">Difficulty Levels</span></div>
+        <div class="intro-stat"><span class="num">100%</span><span class="lbl">Coverage</span></div>
+      </div>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">One question at a time. Detailed feedback after every answer. Score tracked throughout.</p>
+      <div class="topics-grid">
+        <div class="topic-item">Cloud Models (Public/Private/Hybrid)</div>
+        <div class="topic-item">CapEx vs OpEx</div>
+        <div class="topic-item">IaaS, PaaS, SaaS, Serverless</div>
+        <div class="topic-item">Shared Responsibility Model</div>
+        <div class="topic-item">Azure Regions & Availability Zones</div>
+        <div class="topic-item">Region Pairs & Sovereign Regions</div>
+        <div class="topic-item">Azure Resources & Resource Groups</div>
+        <div class="topic-item">Subscriptions & Management Groups</div>
+        <div class="topic-item">Virtual Machines & Scale Sets</div>
+        <div class="topic-item">VM Availability Sets (Fault/Update Domains)</div>
+        <div class="topic-item">Azure Virtual Desktop & Windows VD</div>
+        <div class="topic-item">Container Services (ACI, AKS, Apps)</div>
+        <div class="topic-item">Azure Functions & App Services</div>
+        <div class="topic-item">Azure Networking (VNet, VPN, ExpressRoute, DNS)</div>
+        <div class="topic-item">Azure Storage (Blob, Disk, Files, Tiers)</div>
+        <div class="topic-item">Azure Database Services</div>
+      </div>
+      <button class="btn-start" onclick="startExam()">Start Exam →</button>
+    </div>
+  </div>
+
+  <!-- EXAM SCREEN -->
+  <div id="exam-screen" style="display:none;">
+    <div class="scoreboard">
+      <div class="score-card correct"><div class="label">Correct</div><div class="value" id="sc-correct">0</div></div>
+      <div class="score-card wrong"><div class="label">Wrong</div><div class="value" id="sc-wrong">0</div></div>
+      <div class="score-card total"><div class="label">Answered</div><div class="value" id="sc-total">0</div></div>
+      <div class="score-card pct"><div class="label">Score %</div><div class="value" id="sc-pct">—</div></div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-info">
+        <span id="progress-text">Question 1 of 40</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div id="question-area"></div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen"></div>
+</div>
+
+<script>
+const questions = [
+  // ============================================================
+  // CHAPTER 1 — CLOUD CONCEPTS
+  // ============================================================
+  {
+    id: 1,
+    source: "Ch1 · Utility Pricing",
+    difficulty: "easy",
+    q: "Which analogy best illustrates the core economic concept behind cloud utility pricing?",
+    options: [
+      "Buying a house versus renting an apartment for 10 years",
+      "Buying a car for daily use versus renting a car when traveling",
+      "Purchasing electricity upfront vs. paying a flat monthly fee",
+      "Building a factory in-house versus outsourcing manufacturing permanently"
+    ],
+    correct: 1,
+    explanation: "The material uses the car example explicitly: if you need a car for only 2 days on a trip, renting at $45/day is far cheaper than the daily equivalent of owning one. Cloud services don't need to be cheaper at all times to be economical — it depends on the demand pattern.",
+    whyWrong: "Option A relates to real estate, not cloud economics. Option C is about electricity billing models, not cloud. Option D is manufacturing outsourcing. None of these capture the 'peak vs. average demand' insight the car example delivers."
+  },
+  {
+    id: 2,
+    source: "Ch1 · Utility Pricing in Real World",
+    difficulty: "medium",
+    q: "According to the material, what is the KEY factor that determines whether renting (cloud) is better than owning (on-premises)?",
+    options: [
+      "The geographic distance to the cloud provider's datacenter",
+      "The ratio of peak demand to average demand",
+      "The total number of users accessing the system simultaneously",
+      "The programming languages supported by the cloud platform"
+    ],
+    correct: 1,
+    explanation: "The slides explicitly state: 'Key factor is again the ratio of Peak Demand to Average Demand.' Highly spiky demand (news events, tax season, Christmas shopping) means renting during peaks is far more economical than provisioning for peak capacity all year.",
+    whyWrong: "Geographic distance affects latency but is not the key economic factor. User count is related but not the primary metric stated. Programming language support is a PaaS consideration, not an economic factor."
+  },
+  {
+    id: 3,
+    source: "Ch1 · Utility Pricing in Real World",
+    difficulty: "medium",
+    q: "The material mentions the 'Slashdot effect' as an example of which real-world demand pattern?",
+    options: [
+      "Predictable, gradual growth in user traffic",
+      "Internet flash floods causing sudden demand spikes",
+      "Steady decline in server load during off-peak hours",
+      "Planned traffic increases during product maintenance windows"
+    ],
+    correct: 1,
+    explanation: "The Slashdot effect refers to a sudden massive spike in web traffic when a story goes viral — an 'Internet flash flood.' The slides list it alongside news stories, marketing promotions, product launches, and tax season as examples of highly spiky demand.",
+    whyWrong: "It is not gradual growth, decline, or planned — it is a sudden, unexpected surge."
+  },
+  {
+    id: 4,
+    source: "Ch1 · Utility Pricing in Real World",
+    difficulty: "hard",
+    q: "Which of the following additional costs does the material say should be considered alongside the peak-to-average demand ratio when evaluating cloud economics?",
+    options: [
+      "Hardware warranty costs and datacenter floor space",
+      "Network costs (fixed and usage), interoperability overhead, reliability, and accessibility",
+      "Software licensing fees and developer training budgets",
+      "Marketing costs and customer acquisition spending"
+    ],
+    correct: 1,
+    explanation: "The slide specifically lists: network cost (both fixed costs and usage costs), interoperability overhead, reliability, and accessibility as additional costs to consider beyond peak/average ratio.",
+    whyWrong: "Hardware warranty and floor space are not mentioned. Software licensing and developer training are not listed. Marketing and acquisition costs are business concerns unrelated to this infrastructure economic analysis."
+  },
+  {
+    id: 5,
+    source: "Ch1 · Delivery Models",
+    difficulty: "easy",
+    q: "Which cloud delivery model involves renting processing, storage, network capacity, and other fundamental computing resources?",
+    options: [
+      "Software as a Service (SaaS)",
+      "Platform as a Service (PaaS)",
+      "Infrastructure as a Service (IaaS)",
+      "Function as a Service (FaaS)"
+    ],
+    correct: 2,
+    explanation: "IaaS is explicitly defined as: 'Rent processing, storage, network capacity and other fundamental computing resources.' Examples given include EC2 and S3 (Amazon Web Services).",
+    whyWrong: "SaaS provides applications over a network (e.g., SalesForce.com). PaaS provides an environment for deploying customer-created applications (e.g., App Engine). FaaS/Serverless is not listed as one of the three main delivery models."
+  },
+  {
+    id: 6,
+    source: "Ch1 · Delivery Models",
+    difficulty: "easy",
+    q: "SalesForce.com is given in the material as an example of which cloud delivery model?",
+    options: [
+      "Infrastructure as a Service (IaaS)",
+      "Platform as a Service (PaaS)",
+      "Software as a Service (SaaS)",
+      "Database as a Service (DaaS)"
+    ],
+    correct: 2,
+    explanation: "The material explicitly lists SalesForce.com under Software as a Service (SaaS) — 'Use provider's applications over a network.' AppEng (Google App Engine) is the PaaS example, and EC2/S3 are IaaS examples.",
+    whyWrong: "EC2 and S3 are IaaS. AppEng is PaaS. DaaS is not listed as a primary delivery model."
+  },
+  {
+    id: 7,
+    source: "Ch1 · Big Data",
+    difficulty: "medium",
+    q: "According to the material, what are the three Vs that characterize Big Data?",
+    options: [
+      "Validity, Veracity, Variance",
+      "Volume, Velocity, Variety",
+      "Visibility, Velocity, Value",
+      "Volume, Variance, Verifiability"
+    ],
+    correct: 1,
+    explanation: "The material defines Big Data by: 'such high Volume, Velocity, and Variety as to require specific technology and analytical methods for its transformation into Value.' The three defining Vs are Volume, Velocity, and Variety.",
+    whyWrong: "Validity, Veracity, and Variance are not the three Vs listed. Visibility is not mentioned. Variance and Verifiability are not part of the definition given."
+  },
+  {
+    id: 8,
+    source: "Ch1 · Big Data",
+    difficulty: "hard",
+    q: "A company has a petabyte-scale dataset that is too large to transmit over the internet economically. According to the material, what is the PRIMARY driver for them to use cloud Big Data services?",
+    options: [
+      "To gain access to GPU-accelerated machine learning compute",
+      "To share the overhead of maintaining expensive cyber infrastructure",
+      "To comply with international data sovereignty regulations",
+      "To enable faster software development using Agile methodology"
+    ],
+    correct: 1,
+    explanation: "The slides state: 'Users buy Big Data services from Clouds to share overhead' — referring to the overhead of maintaining expensive cyber infrastructure (lots of disks, networks, and CPUs required for data-intensive computation).",
+    whyWrong: "GPUs are not mentioned in this context. Data sovereignty is a compliance topic not addressed here. Agile methodology is about development processes, not infrastructure economics."
+  },
+  {
+    id: 9,
+    source: "Ch1 · Cloud Models",
+    difficulty: "easy",
+    q: "Which cloud model is described as: 'Owned by cloud services or hosting provider; provides resources and services to multiple organizations and users; accessed via secure network connection typically over the internet'?",
+    options: [
+      "Private Cloud",
+      "Hybrid Cloud",
+      "Community Cloud",
+      "Public Cloud"
+    ],
+    correct: 3,
+    explanation: "The material explicitly describes Public Cloud this way: 'Owned by cloud services or hosting provider. Provides resources and services to multiple organizations and users. Accessed via secure network connection (typically over the internet).'",
+    whyWrong: "Private Cloud is owned by and dedicated to a single organization. Hybrid Cloud combines both. Community Cloud is not defined in the material."
+  },
+  {
+    id: 10,
+    source: "Ch1 · Cloud Models",
+    difficulty: "medium",
+    q: "Which statement is TRUE about Private Cloud according to the material?",
+    options: [
+      "It does NOT provide access to users outside the organization",
+      "It requires no capital expenditure and scales infinitely",
+      "It is operated entirely by the cloud provider's personnel",
+      "It combines public and private infrastructure for flexibility"
+    ],
+    correct: 0,
+    explanation: "The material states for Private Cloud: 'Does not provide access to users outside of the organization.' Organizations create the cloud in their own datacenter and are responsible for operating the services they provide.",
+    whyWrong: "Private Cloud requires hardware purchase (CapEx). It is operated by the organization itself, not the cloud provider. Combining public and private is the Hybrid Cloud definition."
+  },
+  {
+    id: 11,
+    source: "Ch1 · Cloud Models",
+    difficulty: "medium",
+    q: "A company wants maximum flexibility in where applications run and needs to control security and compliance requirements while also having access to on-demand scalability. Which cloud model is BEST suited?",
+    options: [
+      "Public Cloud only",
+      "Private Cloud only",
+      "Hybrid Cloud",
+      "Community Cloud"
+    ],
+    correct: 2,
+    explanation: "The material states Hybrid Cloud: 'Provides the most flexibility. Organizations determine where to run their applications. Organizations control security, compliance, or legal requirements.' It combines public and private.",
+    whyWrong: "Public Cloud alone doesn't give compliance/security control. Private Cloud alone doesn't provide on-demand public scalability. Community Cloud is not defined in the material."
+  },
+  {
+    id: 12,
+    source: "Ch1 · CapEx vs OpEx",
+    difficulty: "easy",
+    q: "Which of the following best describes Capital Expenditure (CapEx) in a cloud context?",
+    options: [
+      "Paying for products and services as needed on a pay-as-you-go basis",
+      "The up-front spending of money on physical infrastructure with value that reduces over time",
+      "Renting software applications on a monthly subscription model",
+      "Billing based on actual usage with no upfront commitment"
+    ],
+    correct: 1,
+    explanation: "The material defines CapEx as: 'The up-front spending of money on physical infrastructure. Costs from CapEx have a value that reduces over time.' This contrasts with OpEx which is pay-as-you-go.",
+    whyWrong: "Option A is OpEx. Option C is SaaS subscription model. Option D describes the consumption-based model (OpEx)."
+  },
+  {
+    id: 13,
+    source: "Ch1 · Cloud Benefits",
+    difficulty: "medium",
+    q: "Which of the following is listed as a Cloud Benefit in the material? (Select the option that contains ONLY benefits listed in the slides)",
+    options: [
+      "High Availability, Elasticity, Scalability, Reliability, Predictability, Security, Governance, Manageability",
+      "High Availability, Scalability, Elasticity, Agility, Disaster Recovery",
+      "Both A and B are fully correct",
+      "Neither A nor B matches the material exactly"
+    ],
+    correct: 2,
+    explanation: "The material lists benefits in TWO places. The Cloud Benefits slide shows: High Availability, Elasticity, Scalability, Reliability, Predictability, Security, Governance, Manageability. The Objective Domain also mentions Agility and Disaster Recovery. Both option A and option B reflect content from the slides.",
+    whyWrong: "Option A alone is incomplete (misses Agility/DR from objective domain). Option B alone is incomplete. The material presents both sets. 'Neither' is incorrect."
+  },
+  {
+    id: 14,
+    source: "Ch1 · Consumption-Based Model",
+    difficulty: "medium",
+    q: "Which statement about the consumption-based cloud model is TRUE according to the material?",
+    options: [
+      "Organizations pay a fixed monthly fee regardless of actual resource usage",
+      "End users only pay for the resources they use, enabling better cost prediction",
+      "The model requires upfront capital expenditure on physical infrastructure",
+      "Billing is estimated quarterly based on projected usage, not actual usage"
+    ],
+    correct: 1,
+    explanation: "The material states: 'Cloud service providers operate on a consumption-based model, which means that end users only pay for the resources that they use. Whatever they use is what they pay for. Better cost prediction. Prices for individual resources and services are provided. Billing is based on actual usage.'",
+    whyWrong: "Fixed monthly fees are not consumption-based. Upfront CapEx is the opposite of the consumption model. Billing is based on ACTUAL usage, not projections."
+  },
+  {
+    id: 15,
+    source: "Ch1 · IaaS/PaaS/SaaS",
+    difficulty: "medium",
+    q: "Which cloud service model is described as 'provides environment for building, testing, and deploying software applications without focusing on managing underlying infrastructure'?",
+    options: [
+      "IaaS",
+      "PaaS",
+      "SaaS",
+      "Serverless"
+    ],
+    correct: 1,
+    explanation: "PaaS (Platform as a Service) is explicitly defined this way in the material. It abstracts the infrastructure management so developers can focus purely on building, testing, and deploying applications.",
+    whyWrong: "IaaS requires the customer to configure and manage hardware. SaaS provides ready-to-use applications. Serverless (like Azure Functions) is a subset of PaaS, but the definition here matches PaaS broadly."
+  },
+  {
+    id: 16,
+    source: "Ch1 · SaaS",
+    difficulty: "easy",
+    q: "Which of the following is the BEST example of SaaS according to the material?",
+    options: [
+      "Amazon EC2 virtual machines",
+      "Google App Engine",
+      "Microsoft Office 365, email, and calendars",
+      "Azure Kubernetes Service"
+    ],
+    correct: 2,
+    explanation: "The material defines SaaS as: 'Users connect to and use cloud-based apps over the internet: for example, Microsoft Office 365, email, and calendars.' EC2 is IaaS. App Engine is PaaS. AKS is a container orchestration service.",
+    whyWrong: "EC2 is IaaS (renting raw compute). Google App Engine is PaaS. AKS is for container orchestration, not a direct SaaS example."
+  },
+  {
+    id: 17,
+    source: "Ch1 · Serverless",
+    difficulty: "medium",
+    q: "According to the material, what does Azure Logic Apps specifically do?",
+    options: [
+      "Runs event-based code without requiring server infrastructure",
+      "Helps automate and orchestrate tasks, business processes, and workflows when integrating apps, data, systems, and services",
+      "Provides a managed Kubernetes orchestration environment",
+      "Scales virtual machines automatically based on load"
+    ],
+    correct: 1,
+    explanation: "The material explicitly defines Azure Logic Apps as: 'a cloud service that helps you automate and orchestrate tasks, business processes, and workflows when you need to integrate apps, data, systems, and services.' Azure Functions is the event-based code runner.",
+    whyWrong: "Event-based code without server infrastructure describes Azure Functions. Managed Kubernetes is AKS. VM autoscaling is VM Scale Sets."
+  },
+  {
+    id: 18,
+    source: "Ch1 · Serverless",
+    difficulty: "hard",
+    q: "According to the material, how does Azure Functions create infrastructure?",
+    options: [
+      "It provisions a dedicated virtual machine that runs continuously",
+      "It creates infrastructure based on an event",
+      "It pre-allocates a fixed pool of containers at deployment",
+      "It requires a Kubernetes cluster to manage pod scheduling"
+    ],
+    correct: 1,
+    explanation: "The material states: 'Azure Functions is code running your service and not the underlying platform or infrastructure. It creates infrastructure based on an event.' This is the core of serverless — on-demand, event-triggered execution.",
+    whyWrong: "Dedicated continuously-running VMs defeat the purpose of serverless. Pre-allocated container pools are not how Functions work. Kubernetes is not required for Azure Functions."
+  },
+  {
+    id: 19,
+    source: "Ch1 · Docker",
+    difficulty: "medium",
+    q: "According to the Docker definition in the material, what is the PRIMARY guarantee Docker containers provide?",
+    options: [
+      "Containers share the host OS kernel, reducing security isolation",
+      "Software will always run the same, regardless of the environment it runs in",
+      "Each container has its own dedicated hardware resources",
+      "Containers auto-scale across multiple datacenters without configuration"
+    ],
+    correct: 1,
+    explanation: "The material quotes Docker Inc.: '...contains everything needed to run: code, runtime, system tools, system libraries — anything you can install on a server. This guarantees that the software will always run the same, regardless of its environment.'",
+    whyWrong: "While containers do share the host OS kernel, the PRIMARY guarantee stated is portability and consistency. Dedicated hardware is a VM characteristic. Auto-scaling across datacenters requires additional tooling."
+  },
+
+  // ============================================================
+  // CHAPTER 1 — AZURE ARCHITECTURE (continued from Ch1 slides)
+  // ============================================================
+  {
+    id: 20,
+    source: "Ch1 · Azure Regions",
+    difficulty: "easy",
+    q: "According to the material, approximately how many Azure regions exist, and how many countries do they represent?",
+    options: [
+      "40-plus regions representing over 100 countries",
+      "60-plus regions representing over 140 countries",
+      "80-plus regions representing over 200 countries",
+      "50-plus regions representing over 120 countries"
+    ],
+    correct: 1,
+    explanation: "The material states: 'Azure offers more global regions than any other cloud provider with 60-plus regions representing over 140 countries.'",
+    whyWrong: "All other options contain incorrect numbers. The exact figures from the slide are 60+ regions and 140+ countries."
+  },
+  {
+    id: 21,
+    source: "Ch1 · Azure Regions",
+    difficulty: "medium",
+    q: "Which of the following is NOT listed as a purpose of Azure Regions in the material?",
+    options: [
+      "Provide flexibility and scale to reduce customer latency",
+      "Preserve data residency with a comprehensive compliance offering",
+      "Provide unlimited free storage to all regional customers",
+      "Made up of one or more datacenters in close proximity"
+    ],
+    correct: 2,
+    explanation: "The material lists three region purposes: (1) made up of one or more datacenters in close proximity, (2) provide flexibility and scale to reduce customer latency, (3) preserve data residency with comprehensive compliance. 'Unlimited free storage' is never mentioned.",
+    whyWrong: "Options A, B, and D are all directly stated in the material. Only Option C is fabricated."
+  },
+  {
+    id: 22,
+    source: "Ch1 · Availability Zones",
+    difficulty: "medium",
+    q: "Which characteristic of Availability Zones is specifically mentioned in the material?",
+    options: [
+      "They are located in different countries to maximize geographic distribution",
+      "They are physically separate datacenters within the same region, connected through private fiber-optic networks",
+      "Each zone serves as a complete backup of another zone in a different region",
+      "They must be manually configured by the customer to provide redundancy"
+    ],
+    correct: 1,
+    explanation: "The material states Availability Zones: 'Physically separate datacenters within the same region. Each datacenter is equipped with independent power, cooling, and networking. Connected through private fiber-optic networks.'",
+    whyWrong: "AZs are within the SAME region, not different countries. They are not inter-region backups (that's Region Pairs). They are automatically available, not manually configured."
+  },
+  {
+    id: 23,
+    source: "Ch1 · Region Pairs",
+    difficulty: "hard",
+    q: "According to the Region Pairs slide, which of the following is TRUE about how Azure updates are rolled out to paired regions?",
+    options: [
+      "Both regions in a pair are updated simultaneously to minimize total downtime",
+      "Updates are rolled out sequentially to minimize downtime",
+      "Only the secondary region receives updates; the primary is always protected",
+      "Updates are only applied during annual maintenance windows"
+    ],
+    correct: 1,
+    explanation: "The material explicitly states: 'Updates are rolled out sequentially to minimize downtime.' This means Azure deploys updates to one region first before rolling to the paired region, ensuring at least one region is always running.",
+    whyWrong: "Simultaneous updates would risk both regions going down. Only the secondary being updated makes no sense operationally. Annual maintenance windows are not mentioned."
+  },
+  {
+    id: 24,
+    source: "Ch1 · Region Pairs",
+    difficulty: "medium",
+    q: "What is the MINIMUM separation distance between Azure Region Pairs?",
+    options: [
+      "At least 100 miles",
+      "At least 200 miles",
+      "At least 300 miles",
+      "At least 500 miles"
+    ],
+    correct: 2,
+    explanation: "The material clearly states: 'At least 300 miles of separation between region pairs.' This ensures that a regional disaster (hurricane, earthquake) doesn't affect both regions simultaneously.",
+    whyWrong: "100, 200, and 500 miles are all incorrect. The slide specifically states 300 miles."
+  },
+  {
+    id: 25,
+    source: "Ch1 · Sovereign Regions",
+    difficulty: "medium",
+    q: "What is unique about Azure Government (US Sovereign Region) compared to standard Azure?",
+    options: [
+      "It uses a completely different programming API that is incompatible with standard Azure",
+      "It is a separate instance of Azure, physically isolated from non-US government deployments, accessible only to screened authorized personnel",
+      "It is located outside the United States to provide international government access",
+      "It only provides storage services, not compute or networking"
+    ],
+    correct: 1,
+    explanation: "The material states Azure Government: 'Separate instance of Azure. Physically isolated from non-US government deployments. Accessible only to screened, authorized personnel.' It meets security and compliance needs of US federal, state, and local governments.",
+    whyWrong: "It uses the same Azure APIs. It is located IN the United States, not outside. It provides the full range of Azure services."
+  },
+  {
+    id: 26,
+    source: "Ch1 · Sovereign Regions",
+    difficulty: "hard",
+    q: "Azure China is operated differently from standard Azure. According to the material, which company operates Azure in China and what is the key data compliance requirement?",
+    options: [
+      "Microsoft operates Azure China directly; data may leave China if needed",
+      "21Vianet operates Azure China; all data stays within China to ensure compliance",
+      "Alibaba Cloud operates Azure China on Microsoft's behalf",
+      "Huawei operates Azure China; data is stored in Hong Kong datacenters"
+    ],
+    correct: 1,
+    explanation: "The material states: 'Physically separated instance of Azure cloud services operated by 21Vianet. All data stays within China to ensure compliance.' Microsoft is China's first foreign public cloud service provider.",
+    whyWrong: "Microsoft doesn't operate Azure China directly — 21Vianet does. Alibaba Cloud and Huawei are not mentioned. Data stays in China, not Hong Kong."
+  },
+  {
+    id: 27,
+    source: "Ch1 · Resource Groups",
+    difficulty: "medium",
+    q: "Which of the following statements about Azure Resource Groups is TRUE according to the material?",
+    options: [
+      "A resource can exist in multiple resource groups simultaneously",
+      "All resources in a resource group must exist in the same Azure region",
+      "Resources can exist in only one resource group, but can be in different regions",
+      "Resource groups cannot be used across multiple applications"
+    ],
+    correct: 2,
+    explanation: "The material states: 'Resources can exist in only one resource group. Resources can exist in different regions. Resources can be moved to different resource groups. Applications can utilize multiple resource groups.'",
+    whyWrong: "A resource can only be in ONE group, not multiple. Resources in the same group CAN be in different regions. Applications CAN use multiple resource groups."
+  },
+  {
+    id: 28,
+    source: "Ch1 · Azure Subscriptions",
+    difficulty: "medium",
+    q: "Azure Subscriptions serve two boundaries. Which of the following correctly identifies BOTH?",
+    options: [
+      "Security boundary and compliance boundary",
+      "Billing boundary and access control boundary",
+      "Geographic boundary and performance boundary",
+      "Storage boundary and compute boundary"
+    ],
+    correct: 1,
+    explanation: "The material states: 'Billing boundary: Generate separate billing reports and invoices for each subscription. Access control boundary: Manage and control access to the resources that users can provision with specific subscriptions.'",
+    whyWrong: "Security/compliance, geographic, performance, storage, and compute are not the two boundaries defined for subscriptions in the material."
+  },
+  {
+    id: 29,
+    source: "Ch1 · Management Groups",
+    difficulty: "hard",
+    q: "Which of the following numerical facts about Azure Management Groups is stated in the material?",
+    options: [
+      "Up to 5,000 management groups can be supported in a single directory with up to 4 levels of depth",
+      "Up to 10,000 management groups in a single directory; tree can support up to 6 levels of depth",
+      "Up to 10,000 management groups in a single directory; tree can support up to 10 levels of depth",
+      "Up to 1,000 management groups in a single directory; tree can support up to 6 levels of depth"
+    ],
+    correct: 1,
+    explanation: "The material specifically states: '10,000 management groups can be supported in a single directory. A management group tree can support up to six levels of depth.'",
+    whyWrong: "5,000 and 1,000 are incorrect management group counts. 4 and 10 levels are incorrect depth values. Only 10,000 groups and 6 levels depth is correct."
+  },
+
+  // ============================================================
+  // CHAPTER 2 — AZURE ARCHITECTURE AND SERVICES (Slides 1–33)
+  // ============================================================
+  {
+    id: 30,
+    source: "Ch2 · Slide 5 — Azure Compute Services",
+    difficulty: "easy",
+    q: "According to the material, Azure Compute is an on-demand service that provides which resources?",
+    options: [
+      "Databases, APIs, analytics, and machine learning",
+      "Disks, processors, memory, networking, and operating systems",
+      "Virtual networks, firewalls, load balancers, and DNS",
+      "Containers, registries, pipelines, and artifact stores"
+    ],
+    correct: 1,
+    explanation: "Slide 5 defines Azure Compute as: 'an on-demand service that provides computing resources such as disks, processors, memory, networking, and operating systems.'",
+    whyWrong: "Databases/APIs/ML describe other Azure services. Virtual networks/firewalls/DNS are networking services. Containers/registries/pipelines are DevOps-oriented services."
+  },
+  {
+    id: 31,
+    source: "Ch2 · Slide 5 — Azure Compute Services",
+    difficulty: "medium",
+    q: "Looking at the Azure compute services diagram (Slide 5), which FIVE compute services are shown?",
+    options: [
+      "Virtual Machines, App Services, Container Instances, Azure Kubernetes Services (AKS), Azure Virtual Desktop",
+      "Virtual Machines, Azure SQL, Container Instances, Azure Cosmos DB, Azure Virtual Desktop",
+      "Virtual Machines, App Services, Azure Blob Storage, Azure DNS, Azure Virtual Desktop",
+      "Virtual Machines, Logic Apps, Azure Functions, AKS, Azure Virtual Desktop"
+    ],
+    correct: 0,
+    explanation: "Slide 5 shows exactly five compute services with icons: Virtual Machines, App Services, Container Instances, Azure Kubernetes Services (AKS), and Azure Virtual Desktop.",
+    whyWrong: "Azure SQL and Cosmos DB are database services. Blob Storage and DNS are storage/networking. Logic Apps and Azure Functions appear in a different context (serverless)."
+  },
+  {
+    id: 32,
+    source: "Ch2 · Slide 6 — Azure Virtual Machines",
+    difficulty: "easy",
+    q: "Azure Virtual Machines (VMs) are defined in the material as:",
+    options: [
+      "Physical servers dedicated to a single customer with full hardware control",
+      "Software emulations of physical computers that include virtual processor, memory, storage, and networking",
+      "Lightweight containers that share the host operating system kernel",
+      "Managed services that abstract away all infrastructure concerns"
+    ],
+    correct: 1,
+    explanation: "Slide 6 defines: 'Azure virtual machines (VMs) are software emulations of physical computers. Includes virtual processor, memory, storage, and networking. IaaS offering that provides total control and customization.'",
+    whyWrong: "Physical dedicated servers are bare-metal offerings. Containers share the host OS kernel (VMs do not). Managed services that abstract infrastructure are more like PaaS."
+  },
+  {
+    id: 33,
+    source: "Ch2 · Slide 7 — VM Scale Sets",
+    difficulty: "medium",
+    q: "What do VM Scale Sets provide according to the material?",
+    options: [
+      "Manual deployment of VMs with fixed resource allocation",
+      "A load-balanced opportunity to automatically scale resources — scale out when needs increase, scale in when needs decrease",
+      "Geographic distribution of VMs across multiple regions for disaster recovery",
+      "A way to share virtual machine images across Azure subscriptions"
+    ],
+    correct: 1,
+    explanation: "Slide 7 states: 'Scale sets provide a load-balanced opportunity to automatically scale resources. Scale out when resource needs increase. Scale in when resource needs are lower.'",
+    whyWrong: "Scale Sets are automatic, not manual. Geographic distribution across regions is done via other mechanisms. Image sharing is done through Azure Compute Gallery/Shared Image Gallery."
+  },
+  {
+    id: 34,
+    source: "Ch2 · Slide 8 — VM Availability Sets",
+    difficulty: "hard",
+    q: "Referring to the VM Availability Sets diagram (Slide 8), what are the TWO mechanisms used to spread VMs across fault and update domains?",
+    options: [
+      "Availability Zones and Region Pairs",
+      "Fault Domains (separate physical racks with independent power and network) and Update Domains (separate update batches so not all VMs reboot simultaneously)",
+      "Load Balancers and Traffic Managers",
+      "VNet Peering and ExpressRoute circuits"
+    ],
+    correct: 1,
+    explanation: "The Slide 8 diagram shows VMs spread across Fault Domain 0, 1, and 2 (each with a separate rack — independent power/network) and Update Domains (UD #1–#5) ensuring not all VMs restart during planned maintenance.",
+    whyWrong: "Availability Zones/Region Pairs are separate concepts. Load Balancers/Traffic Managers route traffic, not provide redundancy for hardware failures. VNet Peering/ExpressRoute are networking concepts."
+  },
+  {
+    id: 35,
+    source: "Ch2 · Slide 10 — Azure Virtual Desktop",
+    difficulty: "medium",
+    q: "Which of the following is listed as a feature of Azure Virtual Desktop in Slide 10?",
+    options: [
+      "Requires additional gateway servers to create desktop environments",
+      "Only supports single-session deployments",
+      "True multisession deployments and reduces risk of resource being left behind",
+      "Exclusively supports Windows 10 operating system"
+    ],
+    correct: 2,
+    explanation: "Slide 10 lists Azure Virtual Desktop features: 'Create a full desktop virtualization environment without having to run additional gateway servers. Reduce risk of resource being left behind. True multisession deployments.'",
+    whyWrong: "It does NOT require additional gateway servers. It supports TRUE MULTISESSION (multiple users simultaneously). OS exclusivity is not mentioned."
+  },
+  {
+    id: 36,
+    source: "Ch2 · Slide 11 — Windows Virtual Desktop",
+    difficulty: "medium",
+    q: "According to Slide 11, how does Windows Virtual Desktop reduce costs for organizations?",
+    options: [
+      "By eliminating the need for any end-user devices",
+      "Through pooled, multi-session resources — multiple users share the same VM instead of each user having their own",
+      "By automatically negotiating lower Microsoft licensing rates",
+      "By moving all workloads to Linux-based infrastructure"
+    ],
+    correct: 1,
+    explanation: "Slide 11 states: 'Reduce costs with pooled, multi-session resources — instead of each user having their own VM, you pool multiple users on shared resources and pay less.'",
+    whyWrong: "End-user devices are still needed. License negotiation is not mentioned. Linux is not mentioned as the cost-reduction mechanism."
+  },
+  {
+    id: 37,
+    source: "Ch2 · Slide 12 — Azure Container Services",
+    difficulty: "medium",
+    q: "What distinguishes Azure Container Apps from Azure Container Instances according to the material?",
+    options: [
+      "Container Instances support load balancing and auto-scaling; Container Apps do not",
+      "Container Apps can load balance and scale; Container Instances are best for short, simple tasks",
+      "Container Apps are free; Container Instances charge per second",
+      "Container Instances use Kubernetes; Container Apps do not"
+    ],
+    correct: 1,
+    explanation: "Slide 12 states: Azure Container Instances — 'The simplest way to run a container on Azure. Best for short, simple tasks.' Azure Container Apps — 'Like Container Instances but more powerful — includes load balancing and auto-scaling. Best for apps that need to scale.'",
+    whyWrong: "It's Container Apps (not Instances) that support load balancing/auto-scaling. Free vs charged is not distinguished this way. AKS uses Kubernetes, not Container Instances."
+  },
+  {
+    id: 38,
+    source: "Ch2 · Slide 12 — Azure Container Services",
+    difficulty: "hard",
+    q: "According to Slide 12, Azure Kubernetes Service (AKS) is described as the best solution in which scenario?",
+    options: [
+      "Running a single container for a short batch job",
+      "Hosting a simple static website",
+      "Managing hundreds or thousands of containers that need complex coordination",
+      "Providing a desktop virtualization environment for remote workers"
+    ],
+    correct: 2,
+    explanation: "Slide 12 states AKS is: 'The most powerful solution — when you have hundreds or thousands of containers needing complex coordination. AKS is the engine that manages all of that.' It is an orchestration service for distributed architectures.",
+    whyWrong: "A single container for a batch job is best handled by Container Instances. Static websites use App Service or Azure Static Web Apps. Desktop virtualization is Azure Virtual Desktop."
+  },
+  {
+    id: 39,
+    source: "Ch2 · Slide 14 — Azure Functions",
+    difficulty: "medium",
+    q: "Azure Functions is classified as which type of service offering according to the material?",
+    options: [
+      "IaaS offering that requires server management",
+      "SaaS offering accessed via a browser",
+      "PaaS offering that supports serverless compute operations; event-based code runs without server infrastructure during inactive periods",
+      "A standalone on-premises software product"
+    ],
+    correct: 2,
+    explanation: "Slide 14 defines Azure Functions as: 'A PaaS offering that supports serverless compute operations. Event-based code runs when called without requiring server infrastructure during inactive periods.'",
+    whyWrong: "It's PaaS, not IaaS (no server management). It's not accessed via browser as a SaaS. It's a cloud service, not on-premises software."
+  },
+  {
+    id: 40,
+    source: "Ch2 · Slide 15 — Comparing Compute Options",
+    difficulty: "hard",
+    q: "According to the comparison slide (Slide 15), which compute option uses 'multiclient login' allowing multiple users to log into the same machine at the same time?",
+    options: [
+      "Virtual Machines",
+      "Containers",
+      "Azure Virtual Desktop",
+      "Azure Functions"
+    ],
+    correct: 2,
+    explanation: "Slide 15 states under Virtual Desktop: 'Multiclient login allows multiple users to log into the same machine at the same time.' This is the big advantage of Virtual Desktop for remote work scenarios.",
+    whyWrong: "VMs typically provide single-session access. Containers run isolated workloads, not user desktops. Azure Functions are serverless compute, not desktop environments."
+  },
+  {
+    id: 41,
+    source: "Ch2 · Slide 17 — Azure App Services",
+    difficulty: "medium",
+    q: "Which languages/frameworks does Azure App Services explicitly support according to Slide 17?",
+    options: [
+      ".NET, .NET Core, Node.js, Java, Python, or PHP",
+      "Only C# and Java for enterprise applications",
+      "Python, R, and Julia for data science workloads",
+      "Go, Rust, and WebAssembly for modern web applications"
+    ],
+    correct: 0,
+    explanation: "Slide 17 explicitly lists: 'Works with .NET, .NET Core, Node.js, Java, Python, or php.' Azure App Services is a fully managed platform for building, deploying, and scaling web apps and APIs quickly.",
+    whyWrong: "App Services supports many languages beyond just C# and Java. Python, R, Julia are data science — R and Julia are not listed. Go, Rust, WebAssembly are not listed."
+  },
+  {
+    id: 42,
+    source: "Ch2 · Slide 19 — Azure Networking",
+    difficulty: "medium",
+    q: "What is the purpose of Azure Virtual Network (VNet) according to the material?",
+    options: [
+      "To create isolated container environments without network access",
+      "To enable Azure resources to communicate with each other, the internet, and on-premises networks",
+      "To provide a dedicated hardware firewall appliance for Azure",
+      "To replicate data between Azure regions automatically"
+    ],
+    correct: 1,
+    explanation: "Slide 19 defines Azure Virtual Network (VNet) as enabling 'Azure resources to communicate with each other, the internet, and on-premises networks.'",
+    whyWrong: "VNet enables communication, not isolation. It's not a hardware firewall. Data replication is handled by other Azure services (e.g., Storage replication, Site Recovery)."
+  },
+  {
+    id: 43,
+    source: "Ch2 · Slide 19 — VPN Gateway",
+    difficulty: "medium",
+    q: "How does Azure VPN Gateway differ from Azure ExpressRoute according to the material?",
+    options: [
+      "VPN Gateway uses a private connection; ExpressRoute uses the public internet",
+      "VPN Gateway sends encrypted traffic over the public internet; ExpressRoute extends on-premises networks via a private connection through a connectivity provider",
+      "Both VPN Gateway and ExpressRoute use identical connection mechanisms",
+      "VPN Gateway is free; ExpressRoute requires a paid subscription"
+    ],
+    correct: 1,
+    explanation: "Slide 19: VPN Gateway — 'used to send encrypted traffic between an Azure virtual network and an on-premises location over the public internet.' ExpressRoute — 'extends on-premises networks into Azure over a private connection that is facilitated by a connectivity provider.'",
+    whyWrong: "It's the reverse — VPN uses public internet (encrypted); ExpressRoute uses a private connection. They use different mechanisms. Pricing difference is not the key distinction."
+  },
+  {
+    id: 44,
+    source: "Ch2 · Slide 28 — VNet Features",
+    difficulty: "hard",
+    q: "According to Slide 28, what does 'Network Peering' in Azure Virtual Networks allow?",
+    options: [
+      "Connecting a VNet to the public internet through a single gateway",
+      "Connecting two private VNets directly together without going through the internet",
+      "Encrypting traffic between on-premises locations and Azure",
+      "Automatically assigning public IP addresses to all resources in a VNet"
+    ],
+    correct: 1,
+    explanation: "Slide 28 states: 'Network peering connects your private networks directly together — Connects two private VNets directly together without going through the internet — useful when you have different environments that need to communicate.'",
+    whyWrong: "Public internet connection uses a gateway/NAT, not peering. Encrypted on-premises traffic is VPN Gateway. Auto-assigning public IPs is Public endpoint functionality."
+  },
+  {
+    id: 45,
+    source: "Ch2 · Slide 30 — VPN Gateway Diagram",
+    difficulty: "hard",
+    q: "In the VPN Gateway diagram (Slide 30), what protocol is shown being used to create the virtual private network tunnel between Azure and the on-premises location?",
+    options: [
+      "SSL/TLS over HTTP",
+      "IPsec IKE S2S (Site-to-Site)",
+      "SSH tunneling over TCP port 22",
+      "MPLS private circuit through a carrier"
+    ],
+    correct: 1,
+    explanation: "Slide 30's diagram clearly labels the tunnel as 'IPsec IKE S2S Virtual private network Tunnel' connecting the Azure VPN Gateway to the on-premises LocalSite1. This is the industry-standard site-to-site VPN protocol.",
+    whyWrong: "SSL/TLS over HTTP is a web protocol, not a VPN tunnel protocol. SSH tunneling is for secure shell, not site-to-site VPN. MPLS is used by ExpressRoute, not VPN Gateway."
+  },
+  {
+    id: 46,
+    source: "Ch2 · Slide 21 — Azure Storage",
+    difficulty: "easy",
+    q: "Which Azure storage service is described as optimized for storing massive amounts of unstructured data such as text or binary data?",
+    options: [
+      "Disk Storage",
+      "Azure Files",
+      "Container Storage (Blob)",
+      "Azure Table Storage"
+    ],
+    correct: 2,
+    explanation: "Slide 21 defines: 'Container storage (blob) is optimized for storing massive amounts of unstructured data, such as text or binary data.' Blob stands for Binary Large Object.",
+    whyWrong: "Disk Storage provides disks for VMs and applications. Azure Files sets up network file shares using SMB protocol. Azure Table Storage is not defined in this slide."
+  },
+  {
+    id: 47,
+    source: "Ch2 · Slide 21 — Azure Files",
+    difficulty: "medium",
+    q: "Azure Files sets up highly available network file shares using which protocol?",
+    options: [
+      "NFS (Network File System)",
+      "FTP (File Transfer Protocol)",
+      "SMB (Server Message Block)",
+      "iSCSI (Internet Small Computer Systems Interface)"
+    ],
+    correct: 2,
+    explanation: "Slide 21 states: 'Azure Files sets up a highly available network file shares that can be accessed by using the standard Server Message Block (SMB) protocol.'",
+    whyWrong: "NFS is also supported by Azure Files but is not the protocol specifically mentioned in this slide. FTP and iSCSI are not mentioned for Azure Files."
+  },
+  {
+    id: 48,
+    source: "Ch2 · Slide 22 — Storage Access Tiers",
+    difficulty: "medium",
+    q: "According to the Storage Access Tiers slide, which tier is optimized for data that is RARELY accessed and stored for at least 180 days?",
+    options: [
+      "Hot tier",
+      "Cool tier",
+      "Archive tier",
+      "Premium tier"
+    ],
+    correct: 2,
+    explanation: "Slide 22 shows three tiers: Hot (frequently accessed), Cool (infrequently accessed, stored at least 30 days), Archive (rarely accessed, stored at least 180 days with flexible latency requirements).",
+    whyWrong: "Hot is for frequently-accessed data. Cool requires 30 days minimum, not 180. Premium is not shown as an access tier in this slide."
+  },
+  {
+    id: 49,
+    source: "Ch2 · Slide 22 — Storage Access Tiers",
+    difficulty: "hard",
+    q: "What is the core design principle behind Azure Storage Access Tiers as stated in Slide 22?",
+    options: [
+      "All data should be stored in the highest-performance tier to minimize latency",
+      "Not all data needs the same speed; you pay less when you accept slower access",
+      "Data should be automatically moved to archive after 30 days to save costs",
+      "Access tiers are permanent once set and cannot be changed"
+    ],
+    correct: 1,
+    explanation: "Slide 22 opens with: 'The idea: not all data needs the same speed. You pay less when you accept slower access.' It also notes: 'You can switch between these access tiers at any time.'",
+    whyWrong: "Highest-performance for all data would be inefficient and costly. 30-day automatic archiving is not stated. Tiers CAN be switched at any time."
+  },
+  {
+    id: 50,
+    source: "Ch2 · Slide 24 — Azure Database Services",
+    difficulty: "medium",
+    q: "Azure Cosmos Database is described in the material as which type of service?",
+    options: [
+      "A relational database as a service based on SQL Server",
+      "A fully-managed MySQL database service for app developers",
+      "A globally-distributed database service that elastically and independently scales throughput and storage",
+      "An open-source PostgreSQL database service"
+    ],
+    correct: 2,
+    explanation: "Slide 24 defines: 'Azure Cosmos Database is a globally-distributed database service that elastically and independently scales throughput and storage.'",
+    whyWrong: "The SQL Server-based relational DaaS is Azure SQL Database. MySQL service is Azure Database for MySQL. PostgreSQL service is Azure Database for PostgreSQL."
+  },
+  {
+    id: 51,
+    source: "Ch2 · Slide 24 — Azure Database Services",
+    difficulty: "medium",
+    q: "Which Azure database service is described as a relational database service based on the OPEN-SOURCE Postgres database engine?",
+    options: [
+      "Azure SQL Database",
+      "Azure SQL Managed Instance",
+      "Azure Database for MySQL",
+      "Azure Database for PostgreSQL"
+    ],
+    correct: 3,
+    explanation: "Slide 24 states: 'Azure Database for PostgreSQL is a relational database service based on the open-source Postgres database engine.' Azure SQL Database uses the Microsoft SQL Server engine.",
+    whyWrong: "Azure SQL Database is based on Microsoft SQL Server (proprietary). SQL Managed Instance also uses SQL Server. MySQL service uses MySQL engine, not PostgreSQL."
+  },
+  {
+    id: 52,
+    source: "Ch2 · Slide 25 — SQL Managed Instance",
+    difficulty: "hard",
+    q: "What is the PRIMARY use case for Azure SQL Managed Instance according to the material?",
+    options: [
+      "Building brand-new cloud-native applications from scratch",
+      "Allowing existing SQL Server customers to lift and shift on-premises applications to the cloud with minimal changes",
+      "Replacing all NoSQL databases with a relational alternative",
+      "Providing free PostgreSQL hosting for open-source developers"
+    ],
+    correct: 1,
+    explanation: "Slide 25 states: 'Azure SQL Managed Instance allows existing SQL Server customers to lift and shift their on-premises applications to the cloud with minimal application and database changes.'",
+    whyWrong: "It's for migrating EXISTING SQL Server apps, not building new cloud-native ones. It doesn't replace NoSQL. It's a Microsoft SQL product, not PostgreSQL or free."
+  },
+  {
+    id: 53,
+    source: "Ch2 · Slide 25 — SQL Managed Instance",
+    difficulty: "hard",
+    q: "According to the material, how can existing SQL Server customers save costs when migrating to Azure SQL Managed Instance?",
+    options: [
+      "By migrating during a special promotional period with free transfer credits",
+      "By exchanging existing SQL Server licenses for discounted rates using the Azure Hybrid Benefit",
+      "By deleting all on-premises SQL Server installations before migration",
+      "By using Azure Cost Management to cap monthly spending"
+    ],
+    correct: 1,
+    explanation: "Slide 25 states: 'Exchange existing licenses for discounted rates on SQL Managed Instance using the Azure Hybrid Benefit.' This allows organizations to reuse their on-premises SQL Server licenses.",
+    whyWrong: "Promotional periods are not mentioned. Deleting on-premises installations is not required. Azure Cost Management is a separate cost tool, not a discount mechanism."
+  },
+  {
+    id: 54,
+    source: "Ch2 · Slide 32 — Azure DNS",
+    difficulty: "medium",
+    q: "According to Slide 32, how does Azure DNS improve reliability and performance?",
+    options: [
+      "By caching DNS records locally on each client device",
+      "By leveraging a global network of DNS name servers using Anycast networking",
+      "By replicating DNS records to on-premises servers every hour",
+      "By using a single authoritative DNS server in the East US region"
+    ],
+    correct: 1,
+    explanation: "Slide 32 states: 'Reliability and performance by leveraging a global network of DNS name servers using Anycast networking.' Anycast routes queries to the nearest DNS server automatically.",
+    whyWrong: "Client-side caching is not the Azure DNS mechanism. Hourly replication to on-premises is not mentioned. A single server would be a single point of failure."
+  },
+  {
+    id: 55,
+    source: "Ch2 · Slide 32 — Azure DNS",
+    difficulty: "hard",
+    q: "What is the benefit of Azure DNS Alias Records according to the material?",
+    options: [
+      "They provide a backup DNS server in case the primary fails",
+      "They allow you to point directly to an Azure resource, and if the resource's IP changes, the alias updates automatically",
+      "They create encrypted DNS queries to prevent DNS spoofing attacks",
+      "They route DNS queries based on the geographic location of the user"
+    ],
+    correct: 1,
+    explanation: "Slide 32 states: 'Alias records support alias record sets to point directly to an Azure resource. They allow you to point directly to an Azure resource, and if the resource's IP changes, the alias updates automatically.'",
+    whyWrong: "Alias records are not backup servers. They don't encrypt DNS queries. Geographic routing is done by Azure Traffic Manager, not DNS alias records."
+  },
+  {
+    id: 56,
+    source: "Ch2 · Slide 31 — ExpressRoute",
+    difficulty: "medium",
+    q: "In the ExpressRoute diagram (Slide 31), the customer's network connects to Azure through which path?",
+    options: [
+      "Directly via the public internet without any intermediary",
+      "Customer network → Partner Edge → Customer's connection → Microsoft Edge → Azure services",
+      "Customer network → Azure VPN Gateway → IPsec tunnel → Azure",
+      "Customer network → Azure Load Balancer → Azure VNet"
+    ],
+    correct: 1,
+    explanation: "Slide 31's diagram shows the ExpressRoute path: Customer's network → Partner Edge → Customer's connection → Microsoft Edge → Azure (and Microsoft 365 Services). This private connection bypasses the public internet.",
+    whyWrong: "ExpressRoute explicitly avoids the public internet. The VPN Gateway/IPsec path describes a VPN, not ExpressRoute. Load Balancers don't facilitate on-premises connectivity."
+  },
+  {
+    id: 57,
+    source: "Ch2 · Slides 15 vs 6 — Comparison",
+    difficulty: "hard",
+    q: "A developer needs to migrate an existing Windows application to Azure with minimal code changes, requiring the full OS and configuration environment. Which compute option is MOST appropriate?",
+    options: [
+      "Azure Container Instances",
+      "Azure Virtual Machines — cloud-based server, complete OS package including host OS, useful for lift-and-shift migrations",
+      "Azure Functions — serverless, event-driven",
+      "Azure Virtual Desktop — provides Windows desktop experience from the cloud"
+    ],
+    correct: 1,
+    explanation: "Slide 15 states VMs are: 'Cloud-based server supporting Windows or Linux. Useful for lift-and-shift migrations to the cloud. Complete operating system package, including the host operating system.' This is the ideal use case for moving existing Windows apps with minimal changes.",
+    whyWrong: "Container Instances require containerization effort. Azure Functions are event-driven serverless — not suitable for traditional full applications. Azure Virtual Desktop is for desktop users, not application hosting."
+  },
+  {
+    id: 58,
+    source: "Ch2 · Slide 12 — Container Definition",
+    difficulty: "medium",
+    q: "How does the material describe Azure Containers compared to Virtual Machines?",
+    options: [
+      "Containers are heavier than VMs and require their own OS per instance",
+      "Containers provide a lightweight, virtualized environment that does NOT require OS management, and can respond to changes on demand",
+      "Containers are identical to VMs but priced differently",
+      "Containers require more CPU resources than VMs for the same workload"
+    ],
+    correct: 1,
+    explanation: "Slide 12 defines: 'Azure containers provide a lightweight, virtualized environment that does not require operating system management, and can respond to changes on demand.' Multiple containers can sit on ONE host OS.",
+    whyWrong: "Containers are lighter than VMs, not heavier. They do NOT have their own OS per instance (they share the host OS). They are not identical to VMs."
+  },
+  {
+    id: 59,
+    source: "Ch2 · General — Scenario",
+    difficulty: "hard",
+    q: "SCENARIO: A startup is building a new web API that receives sporadic, unpredictable event-driven requests — sometimes hundreds per hour, sometimes zero. The team wants zero infrastructure management and to pay only when the code runs. Which service is BEST?",
+    options: [
+      "A dedicated Azure Virtual Machine running 24/7",
+      "Azure Kubernetes Service (AKS) with 10 nodes",
+      "Azure Functions — PaaS serverless, event-based code, no server infrastructure during inactive periods",
+      "Azure SQL Managed Instance"
+    ],
+    correct: 2,
+    explanation: "Azure Functions is ideal: 'A PaaS offering that supports serverless compute operations. Event-based code runs when called without requiring server infrastructure during inactive periods.' Perfect for sporadic, event-driven workloads where paying only for execution is critical.",
+    whyWrong: "A 24/7 VM wastes money when requests are zero. AKS is over-engineered for this simple scenario. Azure SQL Managed Instance is a database service, not a compute/API hosting service."
+  },
+  {
+    id: 60,
+    source: "Ch2 · Slide 22 — Storage Scenario",
+    difficulty: "hard",
+    q: "SCENARIO: A hospital needs to retain patient scan images for 10 years for legal compliance. The images will almost never be accessed. Which Azure Storage tier should they choose?",
+    options: [
+      "Hot — optimized for frequent access",
+      "Cool — optimized for data stored at least 30 days",
+      "Archive — optimized for rarely accessed data stored at least 180 days with flexible latency requirements",
+      "Premium — optimized for high-performance workloads"
+    ],
+    correct: 2,
+    explanation: "The Archive tier is explicitly described as: 'Optimized for storing data that is rarely accessed and stored for at least 180 days with flexible latency requirements.' For 10-year legal retention with virtually no access, Archive is the correct and most cost-effective choice.",
+    whyWrong: "Hot is for frequently accessed data — patient scans won't be accessed daily. Cool is for 30-day minimum — not optimized for long-term cold storage. Premium is not a storage tier defined in this slide."
+  }
+];
+
+// State
+let state = {
+  qIndex: 0,
+  correct: 0,
+  wrong: 0,
+  answered: false,
+  missedQuestions: [],
+  topicResults: {}
+};
+
+function startExam() {
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  renderQuestion();
+}
+
+function updateScoreboard() {
+  const total = state.correct + state.wrong;
+  document.getElementById('sc-correct').textContent = state.correct;
+  document.getElementById('sc-wrong').textContent = state.wrong;
+  document.getElementById('sc-total').textContent = total;
+  document.getElementById('sc-pct').textContent = total > 0 ? Math.round((state.correct/total)*100) + '%' : '—';
+
+  const pct = ((state.qIndex) / questions.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Question ${state.qIndex + 1} of ${questions.length}`;
+  document.getElementById('progress-pct').textContent = Math.round(pct) + '%';
+}
+
+function renderQuestion() {
+  const q = questions[state.qIndex];
+  state.answered = false;
+  updateScoreboard();
+
+  const html = `
+    <div class="question-card" id="qcard">
+      <div class="question-meta">
+        <span class="question-num">Q${String(state.qIndex + 1).padStart(2,'0')} / ${questions.length}</span>
+        <span class="difficulty-badge diff-${q.difficulty}">${q.difficulty}</span>
+      </div>
+      <div class="question-source">${q.source}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options" id="options">
+        ${q.options.map((opt, i) => `
+          <button class="option" onclick="selectAnswer(${i})" id="opt-${i}">
+            <span class="letter">${['A','B','C','D'][i]}</span>
+            <span>${opt}</span>
+            <span class="icon"></span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback-box" id="feedback"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+        ${state.qIndex < questions.length - 1 ? 'Next Question →' : 'See Results →'}
+      </button>
+    </div>
+  `;
+  document.getElementById('question-area').innerHTML = html;
+}
+
+function selectAnswer(selected) {
+  if (state.answered) return;
+  state.answered = true;
+
+  const q = questions[state.qIndex];
+  const isCorrect = selected === q.correct;
+
+  // Disable all options
+  document.querySelectorAll('.option').forEach(el => el.classList.add('disabled'));
+
+  // Mark correct/wrong
+  document.getElementById(`opt-${q.correct}`).classList.add('correct-answer');
+  document.getElementById(`opt-${q.correct}`).querySelector('.icon').textContent = '✓';
+
+  if (!isCorrect) {
+    document.getElementById(`opt-${selected}`).classList.add('wrong-answer');
+    document.getElementById(`opt-${selected}`).querySelector('.icon').textContent = '✗';
+  }
+
+  // Update score
+  if (isCorrect) {
+    state.correct++;
+  } else {
+    state.wrong++;
+    state.missedQuestions.push({
+      num: state.qIndex + 1,
+      q: q.q,
+      yourAnswer: q.options[selected],
+      correctAnswer: q.options[q.correct],
+      source: q.source
+    });
+  }
+
+  // Track topic
+  const topic = q.source.split('·')[1]?.trim() || q.source;
+  if (!state.topicResults[topic]) state.topicResults[topic] = { correct: 0, total: 0 };
+  state.topicResults[topic].total++;
+  if (isCorrect) state.topicResults[topic].correct++;
+
+  // Show feedback
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-box show ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.innerHTML = `
+    <div class="feedback-verdict">
+      ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+    </div>
+    <div class="feedback-explanation">
+      <strong>Why the correct answer is right:</strong>
+      ${q.explanation}
+      ${!isCorrect ? `<strong>Why the other options are wrong:</strong>${q.whyWrong}` : ''}
+    </div>
+  `;
+
+  updateScoreboard();
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion() {
+  if (state.qIndex < questions.length - 1) {
+    state.qIndex++;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('exam-screen').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.style.display = 'block';
+
+  const total = state.correct + state.wrong;
+  const pct = Math.round((state.correct / total) * 100);
+
+  let emoji = '🎯', grade = 'Excellent!', gradeColor = '#10b981';
+  if (pct >= 90) { emoji = '🏆'; grade = 'Outstanding!'; }
+  else if (pct >= 75) { emoji = '🎯'; grade = 'Great job!'; gradeColor = '#3b82f6'; }
+  else if (pct >= 60) { emoji = '📚'; grade = 'Good effort'; gradeColor = '#f59e0b'; }
+  else { emoji = '💪'; grade = 'Needs review'; gradeColor = '#ef4444'; }
+
+  // Identify weak areas (< 50%)
+  const weakAreas = Object.entries(state.topicResults)
+    .filter(([_, v]) => v.correct / v.total < 0.5)
+    .map(([k, v]) => ({ topic: k, score: Math.round((v.correct/v.total)*100) }));
+
+  const strongAreas = Object.entries(state.topicResults)
+    .filter(([_, v]) => v.correct / v.total >= 0.8)
+    .map(([k, v]) => ({ topic: k, score: Math.round((v.correct/v.total)*100) }));
+
+  rs.innerHTML = `
+    <div class="results-hero">
+      <div class="results-emoji">${emoji}</div>
+      <div class="results-title">${grade}</div>
+      <div class="results-score-big" style="color:${gradeColor}">${pct}%</div>
+      <div class="results-sub">${state.correct} correct out of ${total} questions</div>
+    </div>
+
+    <div class="results-grid">
+      <div class="result-section">
+        <h3>⚠ Weak Areas (< 50%)</h3>
+        ${weakAreas.length > 0
+          ? weakAreas.map(a => `<div class="weak-area">${a.topic} (${a.score}%)</div>`).join('')
+          : '<div style="color:var(--correct);font-size:13px">No weak areas! Great work!</div>'
+        }
+      </div>
+      <div class="result-section">
+        <h3>✅ Strong Areas (≥ 80%)</h3>
+        ${strongAreas.length > 0
+          ? strongAreas.map(a => `<div class="strong-area">${a.topic} (${a.score}%)</div>`).join('')
+          : '<div style="color:var(--muted);font-size:13px">Keep practicing to build strong areas.</div>'
+        }
+      </div>
+    </div>
+
+    ${state.missedQuestions.length > 0 ? `
+    <div class="missed-questions">
+      <h3>📋 Questions You Got Wrong — Review These</h3>
+      ${state.missedQuestions.map(m => `
+        <div class="missed-item">
+          <div class="missed-q">Q${m.num}: ${m.q}</div>
+          <div class="missed-correct">✓ Correct: ${m.correctAnswer}</div>
+          <div style="color:var(--wrong);font-family:'Space Mono',monospace;font-size:11px">✗ Your answer: ${m.yourAnswer}</div>
+          <div style="color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;margin-top:4px">${m.source}</div>
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+
+    <button class="btn-restart" onclick="restartExam()">🔄 Restart Exam</button>
+  `;
+}
+
+function restartExam() {
+  state = { qIndex: 0, correct: 0, wrong: 0, answered: false, missedQuestions: [], topicResults: {} };
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
